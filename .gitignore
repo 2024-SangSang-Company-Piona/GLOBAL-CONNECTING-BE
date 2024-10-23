@@ -37,3 +37,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### 쓸모 없는 것 ###
+.DS_Store
