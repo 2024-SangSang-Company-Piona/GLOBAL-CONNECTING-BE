@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -36,14 +35,5 @@ public class MemberService {
             responseDtos.add(memberResponseDto);
         }
         return new Result(responseDtos);
-    /**
-     * 위 코드와 기능적으로 동일하나 stream을 잘 못써서 이렇게 했음
-     * List<MemberResponseDto> collect = members.stream()
-     *                 .map(member -> new MemberResponseDto(member.getId()))
-     *                 .collect(Collectors.toList());
-     *         return new Result(collect);
-     *         마지막이 좀 어려웠는데 Result는 래퍼 클래스로 모든걸 받을 수 있음
-     *         Result는 T를 타입으로하는 필드가 있는데 생성하면서 그 필드를 List<dto> 형태로 넣은 것이다! 좋은데 어려운 코드네요
-     */
     }
 }
