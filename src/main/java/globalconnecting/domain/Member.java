@@ -1,13 +1,14 @@
 package globalconnecting.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.logging.log4j.util.Lazy;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -19,6 +20,9 @@ public class Member {
     private Long id;
 
     private String name;
+
+    @OneToMany(mappedBy = "member")
+    private List<Chatting> chattings = new ArrayList<>();
 
     public static Member createMember(String name){
         Member member = new Member();
