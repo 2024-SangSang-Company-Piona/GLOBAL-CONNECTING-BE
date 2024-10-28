@@ -22,13 +22,18 @@ public class Chatting {
 
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false)
-    private Member member;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "member_id", nullable = false)
+//    private Member member;
 
     @CreatedDate
     private LocalDateTime createTime;
 
     @OneToMany(mappedBy = "chatting")
     private List<Message> messageList = new ArrayList<>();
+
+    public static Chatting createChatting(){
+        Chatting chatting = new Chatting();
+        return chatting;
+    }
 }

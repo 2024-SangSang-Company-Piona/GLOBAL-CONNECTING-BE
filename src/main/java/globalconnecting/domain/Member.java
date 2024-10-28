@@ -21,8 +21,8 @@ public class Member {
 
     private String name;
 
-    @OneToMany(mappedBy = "member")
-    private List<Chatting> chattings = new ArrayList<>();
+//    @OneToMany(mappedBy = "member")
+//    private List<Chatting> chattings = new ArrayList<>();
 
     public static Member createMember(String name){
         Member member = new Member();
