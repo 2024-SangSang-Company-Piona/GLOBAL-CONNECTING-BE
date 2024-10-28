@@ -13,10 +13,13 @@ public class GPTRequestDTO {
     private List<Message> messages;
 
     @Data
-    @AllArgsConstructor
     @NoArgsConstructor
     public static class Message {
         private String role;   // "user", "assistant", or "system"
         private String content;  // User's question or assistant's response
+        public Message(String role, String content){
+        this.role = role;
+        this.content = content;
+        }
     }
 }
