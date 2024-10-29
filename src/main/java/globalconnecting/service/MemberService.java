@@ -21,7 +21,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public MemberResponseDto join(MemberRequestDto requestDto){
-        Member member = Member.createMember(requestDto.getClass().getName());
+        Member member = Member.createMember(requestDto.getName());
         memberRepository.save(member);
         MemberResponseDto responseDto = new MemberResponseDto(member.getId());
         return responseDto;
@@ -36,4 +36,5 @@ public class MemberService {
         }
         return new Result(responseDtos);
     }
+
 }

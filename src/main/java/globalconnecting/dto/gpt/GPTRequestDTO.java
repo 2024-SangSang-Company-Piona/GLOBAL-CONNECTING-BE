@@ -1,4 +1,4 @@
-package globalconnecting.dto;
+package globalconnecting.dto.gpt;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

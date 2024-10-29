@@ -1,7 +1,8 @@
 package globalconnecting.controller;
 
-import globalconnecting.dto.GPTRequestDTO;
-import globalconnecting.dto.GPTResponseDTO;
+import globalconnecting.dto.MessageRequestDTO;
+import globalconnecting.dto.gpt.GPTRequestDTO;
+import globalconnecting.dto.gpt.GPTResponseDTO;
 import globalconnecting.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,8 @@ import reactor.core.publisher.Mono;
 public class ChatController {
     private final ChatService chatService;
 
-    @PostMapping("/ask/{chatId}")
-    public Mono<GPTResponseDTO> askQuestion(@RequestBody GPTRequestDTO gptRequestDTO, @PathVariable Long chatId){
-        return chatService.askQuestion(gptRequestDTO, chatId);
-    }
-
-    @PostMapping("/{chatId}")
-    public void makeChatting(@PathVariable Long chatId){
-        chatService.ChattingIsNull(chatId);
+    @PostMapping("/ask/{memberId}")
+    public Mono<GPTResponseDTO> askQuestion(@RequestBody MessageRequestDTO messageRequestDTO , @PathVariable Long memberId, @RequestParam(required = false) Long chatId){
+        return chatService.askQuestion(messageRequestDTO, memberId, chatId);
     }
 }

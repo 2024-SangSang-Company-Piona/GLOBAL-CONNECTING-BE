@@ -14,6 +14,7 @@ public class Message {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long MessageId;
     private String role;
+    @Column(length = 65535)
     private String content;
     @ManyToOne(fetch = FetchType.LAZY)
     private Chatting chatting;
