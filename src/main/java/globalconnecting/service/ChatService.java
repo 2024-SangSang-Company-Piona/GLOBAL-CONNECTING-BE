@@ -71,7 +71,7 @@ public class ChatService {
                     // 4. GPT 응답 메시지를 가져와 Message 엔티티로 변환
                     GPTResponseDTO.Message gptMessage = gptResponse.getChoices().get(0).getMessage(); // 첫 번째 응답
                     Message responseMessage = Message.createMessage(gptMessage.getRole(), gptMessage.getContent(), chatting);
-
+                    log.info("GPT 답변 : {}",gptResponse);
                     // 5. 응답 메시지를 chatting과 연관짓고, messageList 및 repository에 추가
                     responseMessage.addMessages(chatting);
                     messageRepository.save(responseMessage);
