@@ -6,6 +6,7 @@ import globalconnecting.domain.Message;
 import globalconnecting.dto.MessageRequestDTO;
 import globalconnecting.dto.gpt.GPTRequestDTO;
 import globalconnecting.dto.gpt.GPTResponseDTO;
+import globalconnecting.dto.gpt.ResponseOnWeb;
 import globalconnecting.repository.ChattingRepository;
 import globalconnecting.repository.MemberRepository;
 import globalconnecting.repository.MessageRepository;
@@ -39,7 +40,7 @@ public class ChatService {
     private String content;
 
     // GPTRequestDTO는 그냥 질문 하나를 받아오는 용도, List에 얘를 넣어서 지피티한테 요청
-    public Mono<GPTResponseDTO> askQuestion(MessageRequestDTO messageRequestDTO, Long memberId, Long chatId) {
+    public Mono<ResponseOnWeb> askQuestion(MessageRequestDTO messageRequestDTO, Long memberId, Long chatId) {
         Member member = memberRepository.findById(memberId).orElseThrow(()-> new NoSuchElementException("해당 회원은 존재하지 않습니다"));
         // 채팅이 있나 없나 확인, 없으면 생성
         Chatting chatting = ChattingIsNull(chatId);
@@ -48,7 +49,7 @@ public class ChatService {
         GPTRequestDTO gptRequestDTO = new GPTRequestDTO();
         gptRequestDTO.setModel(model);
         GPTRequestDTO.Message systemMessage = new GPTRequestDTO.Message(role,content);
-        GPTRequestDTO.Message userMessage = new GPTRequestDTO.Message("user",messageRequestDTO.getContent());
+        GPTRequestDTO.Message userMessage = new GPTRequestDTO.Message("user",messageRequestDTO.getResumeText());
 
         // 채팅방에 있는 모든 메시지를 가져온다, 메시지를 가져와서 requestDTO의 메세지에 리스트를 전달해야한다
         List<Message> messageList = getAllMessage(chatting, systemMessage, userMessage);
@@ -67,15 +68,23 @@ public class ChatService {
                 .bodyValue(gptRequestDTO)
                 .retrieve()
                 .bodyToMono(GPTResponseDTO.class)
-                .doOnSuccess(gptResponse -> {
+                .flatMap(gptResponse -> {
                     // 4. GPT 응답 메시지를 가져와 Message 엔티티로 변환
                     GPTResponseDTO.Message gptMessage = gptResponse.getChoices().get(0).getMessage(); // 첫 번째 응답
                     Message responseMessage = Message.createMessage(gptMessage.getRole(), gptMessage.getContent(), chatting);
-                    log.info("GPT 답변 : {}",gptResponse);
+                    log.info("GPT 답변 : {}", gptResponse);
+
                     // 5. 응답 메시지를 chatting과 연관짓고, messageList 및 repository에 추가
                     responseMessage.addMessages(chatting);
                     messageRepository.save(responseMessage);
                     messageList.add(responseMessage);
+
+                    // 6. 새로운 DTO로 변환하여 반환
+                    ResponseOnWeb customResponse = new ResponseOnWeb();
+                    customResponse.setRole(gptResponse.getChoices().get(0).getMessage().getRole());
+                    customResponse.setReviewedText(gptResponse.getChoices().get(0).getMessage().getContent());
+                    return Mono.just(customResponse); // 새로운 DTO를 반환
+
                 })
                 .onErrorResume(WebClientResponseException.class, e -> {
                     log.error("Error: " + e.getResponseBodyAsString());

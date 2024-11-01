@@ -24,6 +24,6 @@ public class GPTResponseDTO {
     @NoArgsConstructor
     public static class Message {
         private String role;   // "assistant" or other roles
-        private String reviewedText;  // GPT의 응답 내용
+        private String content;  // GPT의 응답 내용
     }
 }

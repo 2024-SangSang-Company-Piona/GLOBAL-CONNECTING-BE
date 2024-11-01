@@ -8,5 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MessageRequestDTO {
-    private String content;
+    private String resumeText;
 }
